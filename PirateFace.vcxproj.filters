@@ -18,5 +18,22 @@
     <ClCompile Include="PirateFace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InitShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Angel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
