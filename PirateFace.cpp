@@ -1,48 +1,4 @@
-#include <iostream>
-#include "Angel.h"
-#include <vector>
-#include <Math.h>
-
-using namespace Angel;
-using namespace std;
-typedef vec3 point3;
-
-struct PirateFace {
-	GLfloat faceRadius;
-	GLint numberOfVerticesOfCircle;
-	point3 centerOfFace;
-	GLfloat eyeRadius;
-	point3 centerOfEye;
-	GLint numberOfVerticesOfBandanna;
-	GLfloat smileRadius;
-	GLint numberOfVerticesOfSmile;
-	point3 centerOfSmile;
-
-	PirateFace() {
-		faceRadius = 0.35;
-		numberOfVerticesOfCircle = 360;
-		centerOfFace = { 0.0,0.0,0.0 };
-		eyeRadius = 0.04;
-		centerOfEye = { 0.13,0.1,0.0 };
-		numberOfVerticesOfBandanna = 6;
-		smileRadius = 0.22;
-		numberOfVerticesOfSmile = 15;
-		centerOfSmile = { 0.0,0.03,0.0 };
-	}
-};
-
-struct PirateFace pirateFace;
-
-vec3 color = { 0.0,0.0,0.0 };
-
-const double PI = 3.141592653589793238463;
-
-const GLint width = 500;
-const GLint height = 500;
-
-vector<point3> pirateFaceVertices;
-
-GLfloat radius = 0.3;
+#include "PirateFace.h"
 
 void quad(int a, int b, int c) {
 	pirateFaceVertices.push_back(pirateFaceVertices[a]);
@@ -143,6 +99,10 @@ void init()
 	glVertexAttribPointer(vColor, 3, GL_FLOAT, GL_FALSE, 0,
 		BUFFER_OFFSET(sizeof(point3)*pirateFaceVertices.size()));
 
+	uniformScalePos = glGetUniformLocation(program, "scale");
+	uniformTranslatePos = glGetUniformLocation(program, "translate");
+	uniformRotatePos = glGetUniformLocation(program, "rotate");
+
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 }
@@ -150,6 +110,9 @@ void myDisplay(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glUniform3fv(uniformScalePos, 1, scaleVec);
+	glUniform3fv(uniformTranslatePos, 1, translateVec);
+	glUniform3fv(uniformRotatePos, 1, rotateVec);
 	glDrawArrays(GL_LINE_LOOP, 0, pirateFace.numberOfVerticesOfCircle);
 	glDrawArrays(GL_TRIANGLES, pirateFace.numberOfVerticesOfCircle, pirateFace.numberOfVerticesOfBandanna);
 	glDrawArrays(GL_LINE_LOOP, pirateFace.numberOfVerticesOfCircle + pirateFace.numberOfVerticesOfBandanna,
@@ -161,12 +124,30 @@ void myDisplay(void)
 	glutSwapBuffers();
 }
 
-void myMouse(int btn, int state, int x, int y) {
 
+GLfloat theta = 0.0;
+void animate(int id) {
+	
+	if (theta < -360) {
+		return;
+	}
+
+	scaleVec = { 0.5,0.5,0.5 };
+	rotateVec = { 0.0,0.0,theta };
+	translateVec = { translateAmount,0.0,0.0 };
+
+	translateAmount += 0.15;
+	theta -= 360 / n;
+
+	glutPostRedisplay();
+
+	glutTimerFunc(700, animate, 0);
 }
 
 void myKeyboard(unsigned char key, int x, int y) {
-
+	if (key == 'a') {
+		glutTimerFunc(700, animate, 0);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -175,14 +156,13 @@ int main(int argc, char **argv) {
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(width, height);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("LShape");
+	glutCreateWindow("Pirate Face");
 	glewExperimental = GL_TRUE;
 	glewInit();
 
 	init();
 
 	glutKeyboardFunc(myKeyboard);
-	glutMouseFunc(myMouse);
 	glutDisplayFunc(myDisplay);
 	glutMainLoop();
 	return 0;

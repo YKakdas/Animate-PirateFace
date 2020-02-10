@@ -161,7 +161,12 @@
     <ClInclude Include="Angel.h" />
     <ClInclude Include="CheckError.h" />
     <ClInclude Include="mat.h" />
+    <ClInclude Include="PirateFace.h" />
     <ClInclude Include="vec.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fshader.glsl" />
+    <None Include="vshader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
