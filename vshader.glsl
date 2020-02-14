@@ -19,9 +19,9 @@ void main()
 	
   
   mat4 rotateMat = mat4( angleCos, angleSin, 0.0, 0.0,
-		    -angleSin,  angleCos, 0.0, 0.0,
-		    0.0,  0.0, 1.0, 0.0,
-		    0.0,  0.0, 0.0, 1.0 );
+						-angleSin,  angleCos, 0.0, 0.0,
+						0.0,  0.0, 1.0, 0.0,
+						0.0,  0.0, 0.0, 1.0 );
 					
   mat4 translateMat = mat4(1.0,0.0,0.0,0.0,
 					0.0,1.0,0.0,0.0,

@@ -6,8 +6,8 @@ void quad(int a, int b, int c) {
 	pirateFaceVertices.push_back(pirateFaceVertices[c]);
 }
 
-void fillPointsOfPirateFace() {
-	for (int i = 0; i < pirateFace.numberOfVerticesOfCircle; i++)
+void fillPointsOfPirateFace() { // fills all vertices of pirate face into single vector 
+	for (int i = 0; i < pirateFace.numberOfVerticesOfCircle; i++) // vertices for face circle(biggest one)
 	{
 		float angle = 2 * PI * i / pirateFace.numberOfVerticesOfCircle;
 		point3 point;
@@ -17,10 +17,11 @@ void fillPointsOfPirateFace() {
 		pirateFaceVertices.push_back(point);
 	}
 
-	quad(40, 140, 145);
+	/* vertices for forehead bandanna */
+	quad(40, 140, 145); 
 	quad(145, 35, 40);
 
-	for (int i = 0; i < pirateFace.numberOfVerticesOfCircle; i++)
+	for (int i = 0; i < pirateFace.numberOfVerticesOfCircle; i++) // vertices for left eye
 	{
 		float angle = 2 * PI * i / pirateFace.numberOfVerticesOfCircle;
 		point3 point;
@@ -30,7 +31,7 @@ void fillPointsOfPirateFace() {
 		pirateFaceVertices.push_back(point);
 	}
 
-	for (int i = 0; i < pirateFace.numberOfVerticesOfCircle;)
+	for (int i = 0; i < pirateFace.numberOfVerticesOfCircle;) // vertices for right eye and its bandanna
 	{
 		pirateFaceVertices.push_back(pirateFace.centerOfEye);
 		float angle = 2 * PI * i / pirateFace.numberOfVerticesOfCircle;
@@ -45,7 +46,7 @@ void fillPointsOfPirateFace() {
 		point.y = pirateFace.centerOfEye.y + sin(angle) * pirateFace.eyeRadius;
 		point.z = 0.0;
 		pirateFaceVertices.push_back(point);
-		if (i == 135) {
+		if (i == 135) { // for eye bandanna
 			pirateFaceVertices.push_back({ 0.155,0.12,0.0 });
 			pirateFaceVertices.push_back({ 0.155,0.2,0.0 });
 			pirateFaceVertices.push_back({ 0.105,0.2,0.0 });
@@ -55,7 +56,7 @@ void fillPointsOfPirateFace() {
 		}
 	}
 	
-	for (int i = pirateFace.numberOfVerticesOfSmile+3; i < pirateFace.numberOfVerticesOfSmile*2-2; i++)
+	for (int i = pirateFace.numberOfVerticesOfSmile+3; i < pirateFace.numberOfVerticesOfSmile*2-2; i++) // vertices for smiley
 	{
 		float angle = 2 * PI * i / (pirateFace.numberOfVerticesOfSmile * 2);
 		point3 point;
@@ -110,23 +111,23 @@ void myDisplay(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	/* send uniform variables' values to vertex shader */
 	glUniform3fv(uniformScalePos, 1, scaleVec);
 	glUniform3fv(uniformTranslatePos, 1, translateVec);
 	glUniform3fv(uniformRotatePos, 1, rotateVec);
-	glDrawArrays(GL_LINE_LOOP, 0, pirateFace.numberOfVerticesOfCircle);
-	glDrawArrays(GL_TRIANGLES, pirateFace.numberOfVerticesOfCircle, pirateFace.numberOfVerticesOfBandanna);
-	glDrawArrays(GL_LINE_LOOP, pirateFace.numberOfVerticesOfCircle + pirateFace.numberOfVerticesOfBandanna,
+
+	glDrawArrays(GL_LINE_LOOP, 0, pirateFace.numberOfVerticesOfCircle); // for face circle
+	glDrawArrays(GL_TRIANGLES, pirateFace.numberOfVerticesOfCircle, pirateFace.numberOfVerticesOfBandanna); // for forehead bandanna
+	glDrawArrays(GL_LINE_LOOP, pirateFace.numberOfVerticesOfCircle + pirateFace.numberOfVerticesOfBandanna, // for left eye
 		pirateFace.numberOfVerticesOfCircle);
 	glDrawArrays(GL_TRIANGLES, pirateFace.numberOfVerticesOfCircle * 2 + pirateFace.numberOfVerticesOfBandanna,
-		pirateFace.numberOfVerticesOfCircle*3+ pirateFace.numberOfVerticesOfBandanna);	
+		pirateFace.numberOfVerticesOfCircle*3+ pirateFace.numberOfVerticesOfBandanna); // for right eye and eye bandanna	
 	glDrawArrays(GL_LINE_STRIP, pirateFace.numberOfVerticesOfCircle * 5 + pirateFace.numberOfVerticesOfBandanna*2,
-		pirateFace.numberOfVerticesOfSmile-5);
+		pirateFace.numberOfVerticesOfSmile-5); // for smiley
 	glutSwapBuffers();
 }
 
-
-GLfloat theta = 0.0;
-void animate(int id) {
+void animate(int id) { // calculate transformation vectors for animation mode
 	
 	if (theta < -360) {
 		return;
@@ -136,7 +137,7 @@ void animate(int id) {
 	rotateVec = { 0.0,0.0,theta };
 	translateVec = { translateAmount,0.0,0.0 };
 
-	translateAmount += 0.15;
+	translateAmount += 0.15*9/n;
 	theta -= 360 / n;
 
 	glutPostRedisplay();
@@ -144,6 +145,7 @@ void animate(int id) {
 	glutTimerFunc(700, animate, 0);
 }
 
+/* If key 'a' is pressed, start animation mode timer */
 void myKeyboard(unsigned char key, int x, int y) {
 	if (key == 'a') {
 		glutTimerFunc(700, animate, 0);
